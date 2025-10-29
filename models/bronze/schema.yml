@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stg_src_local_bike_stores
+    description: "Store locations across California, New York, and Texas."
+    columns:
+      - name: store_id
+        description: "Primary key, unique identifier for each store."
+        tests:
+          - unique
+          - not_null

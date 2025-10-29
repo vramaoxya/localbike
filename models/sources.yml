@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: Local Bike
+  - name: src-local-bike
     schema: src-local-bike
     description: "Raw sales and production data for Local Bike from BigQuery."
     tables:
