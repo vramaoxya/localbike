@@ -14,7 +14,6 @@ models:
           - is_valid_email:
               allow_nulls: false
               allowed_domains: ["bikes.shop"]
-              pattern: '^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$'
   - name: stg_src_local_bike_brands
     description: "Bike brands sold by Local Bike."
     columns:
@@ -35,7 +34,6 @@ models:
         tests:
           - is_valid_email:
               allow_nulls: false
-              pattern: '^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$'
   - name: stg_src_local_bike_orders
     description: "Order headers with key dates and statuses"
     columns:
@@ -65,7 +63,6 @@ models:
           - is_valid_email:
               allow_nulls: false
               allowed_domains: ["bikes.shop"]
-              pattern: '^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$'
   - name: stg_src_local_bike_categories
     description: "Product categories such as road, mountain, and electric bikes."
     columns:
