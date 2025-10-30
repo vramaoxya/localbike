@@ -1,10 +1,10 @@
 select
     store_id as store_id,
-    store_name as store_name,
-    phone as phone,
-    email as email,
-    street as street,
-    city as city,
-    state as state,
-    zip_code as zip_code
+    INITCAP(store_name) as store_name,
+    phone as store_phone,
+    email as store_email,
+    street as store_street,
+    INITCAP(city) as store_city,
+    UPPER(state) as store_state,
+    zip_code as store_zip_code
 from {{ source("src_local_bike", "stores") }}
