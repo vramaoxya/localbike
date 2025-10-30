@@ -2,10 +2,91 @@ version: 2
 
 models:
   - name: stg_src_local_bike_stores
-    description: "Store locations across California, New York, and Texas."
+    description: "Store locations in California, New York, and Texas."
     columns:
       - name: store_id
         description: "Primary key, unique identifier for each store."
+        tests:
+          - unique
+          - not_null
+      - name: store_email
+        tests:
+          - is_valid_email:
+              allow_nulls: false
+              allowed_domains: ["bikes.shop"]
+              pattern: '^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$'
+  - name: stg_src_local_bike_brands
+    description: "Bike brands sold by Local Bike."
+    columns:
+      - name: brand_id
+        description: "Primary key, unique identifier for each brand."
+        tests:
+          - unique
+          - not_null
+  - name: stg_src_local_bike_customers
+    description: "Customer informations."
+    columns:
+      - name: customer_id
+        description: "Primary key, unique identifier for each brand."
+        tests:
+          - unique
+          - not_null
+      - name: customer_email
+        tests:
+          - is_valid_email:
+              allow_nulls: false
+              pattern: '^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$'
+  - name: stg_src_local_bike_orders
+    description: "Order headers with key dates and statuses"
+    columns:
+      - name: order_id
+        description: "Primary key, unique identifier for each order."
+        tests:
+          - unique
+          - not_null
+  - name: stg_src_local_bike_products
+    description: "Products sold, linked to brands and categories."
+    columns:
+      - name: product_id
+        description: "Primary key, unique identifier for each product."
+        tests:
+          - unique
+          - not_null
+  - name: stg_src_local_bike_staffs
+    description: "Sales and management staff working in Local Bike stores."
+    columns:
+      - name: staff_id
+        description: "Primary key, unique identifier for each staff."
+        tests:
+          - unique
+          - not_null
+      - name: staff_email
+        tests:
+          - is_valid_email:
+              allow_nulls: false
+              allowed_domains: ["bikes.shop"]
+              pattern: '^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$'
+  - name: stg_src_local_bike_categories
+    description: "Product categories such as road, mountain, and electric bikes."
+    columns:
+      - name: categor_id
+        description: "Primary key, unique identifier for each category."
+        tests:
+          - unique
+          - not_null
+  - name: stg_src_local_bike_order_items
+    description: "Detailed order line items with pricing and discounts."
+    columns:
+      - name: order_item_id
+        description: "Primary key, unique identifier for each order item. The key = order_id + '_' + item_id."
+        tests:
+          - unique
+          - not_null
+  - name: stg_src_local_bike_stocks
+    description: "Stock of products and availability."
+    columns:
+      - name: order_item_id
+        description: "Primary key, unique identifier for each product in the stock. The key = store_id + '_' + product_id."
         tests:
           - unique
           - not_null

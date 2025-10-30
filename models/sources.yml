@@ -12,7 +12,7 @@ sources:
       - name: order_items
         description: "Detailed order line items with pricing and discounts."
       - name: stores
-        description: "Store locations across California, New York, and Texas."
+        description: "Store locations in California, New York, and Texas."
       - name: staffs
         description: "Sales and management staff working in Local Bike stores."
       - name: products
