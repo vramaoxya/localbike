@@ -247,6 +247,7 @@ FOREIGN KEY (product_id) REFERENCES `databird-473015.dbt_localbike_bronze.stg_sr
 
 🧩 Diagramme Relationnel (ER Diagram)
 erDiagram
+```mermaid
   %% =========================
   %%        SALES
   %% =========================
