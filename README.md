@@ -11,14 +11,37 @@ Local Bike data Analyse
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
 # Commandes:
-dbt seed --select vacations seasons
-dbt test -- bronze 
+
+dbt depts
+dbt seed --select map seasons
+dbt test -- bronze
 dbt run -- bronze silver gold
 dbt build -- bronze silver gold
 
+Generate docs :
+dbt docs generate
+dbt docs serve
+
+---
+
+## 🧭 Table des matières
+
+1. [Introduction](#-lhistoire-de-local-bike)
+2. [Une histoire ancrée dans la communauté](#-une-histoire-ancrée-dans-la-communauté)
+3. [Des implantations stratégiques](#-des-implantations-stratégiques-pour-une-mission-nationale)
+4. [Une stratégie au service de la mission](#-une-stratégie-au-service-de-la-mission)
+5. [Une expérience avant tout](#-une-expérience-avant-tout)
+6. [Votre mission](#-votre-mission)
+7. [Schéma brut : Local Bike](#-schéma-brut--local-bike)
+   - [Création du Dataset](#1️⃣-création-du-dataset)
+   - [Création des Tables](#2️⃣-création-des-tables)
+8. [Diagramme Relationnel](#-diagramme-relationnel-er-diagram)
+
+---
+
 # Cas Final
 
-# 🚲 L’histoire de Local Bike
+## 🚲 L’histoire de Local Bike
 
 ### Une passion transformée en vision pour l’avenir
 
@@ -111,9 +134,18 @@ Vous travaillez pour **Local Bike**, qui souhaite développer son **premier tabl
 
 ---
 
+## 🗄️ Schéma brut : Local Bike
+
+### GCP Project
+
+- **Project name** : `databird-473015`
+- **Bronze model** : `dbt_localbike_bronze`
+
+---
+
 ### 1️⃣ Création du Dataset
 
-```sql
+````sql
 CREATE SCHEMA IF NOT EXISTS `databird-473015.dbt_localbike_bronze`
 OPTIONS (
   location = "US",
@@ -252,8 +284,8 @@ FOREIGN KEY (product_id) REFERENCES `databird-473015.dbt_localbike_bronze.stg_sr
 
 
 🧩 Diagramme Relationnel (ER Diagram)
-erDiagram
 ```mermaid
+erDiagram
   %% =========================
   %%        SALES
   %% =========================
@@ -355,4 +387,39 @@ erDiagram
 
   STORES   ||--o{ STOCKS : "stocks"
   PRODUCTS ||--o{ STOCKS : "stocked as"
-```
+````
+
+## 🏗️ Project Structure (Medallion Architecture)
+
+local_bike/
+│
+├── dbt_project.yml
+│
+├── models/
+│ ├── bronze/ # staging sources, data from BigQuery
+│ │ ├── stg_customers.sql
+│ │ ├── stg_orders.sql
+│ │ ├── stg_order_items.sql
+│ │ ├── stg_stores.sql
+│ │ ├── stg_staffs.sql
+│ │ ├── stg_products.sql
+│ │ ├── stg_brands.sql
+│ │ └── stg_categories.sql
+│ │
+│ ├── silver/ # Intermediate models
+│ │ ├── int_sales.sql
+│ │ ├── int_product_sales.sql
+│ │ └── int_customer_sales.sql
+│ │
+│ ├── gold/ # Analytical models for BI tools
+│ │ ├── dim_customers.sql
+│ │ ├── dim_products.sql
+│ │ ├── fct_sales.sql
+│ │ └── fct_customer_lifetime_value.sql
+│ │
+│ └── schema.yml
+│
+└── seeds/
+│ └── map.csv
+| └── seasons.csv
+└── README.md

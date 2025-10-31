@@ -58,8 +58,8 @@ seeds:
     seasons:
       +column_types:
         season_name: string
-        start_month_day: string
-        end_month_day: string
+        start_month_day: date
+        end_month_day: date
     map:
       +column_types:
         city: string
