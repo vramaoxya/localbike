@@ -10,6 +10,12 @@ Local Bike data Analyse
 - Find [dbt events](https://events.getdbt.com) near you
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
+# Commandes:
+dbt seed --select vacations seasons
+dbt test -- bronze 
+dbt run -- bronze silver gold
+dbt build -- bronze silver gold
+
 # Cas Final
 
 # 🚲 L’histoire de Local Bike
