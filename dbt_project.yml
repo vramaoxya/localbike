@@ -46,11 +46,26 @@ models:
     silver:
       +schema: silver
       +materialized: view
-      +tags: ['integration', 'silver']
+      +tags: ['integration', 'intermediate', 'silver']
     gold:
       +schema: gold
-      +tags: ['analytics', 'gold']
+      +tags: ['mrt', 'analytics', 'gold']
       +materialized: table
+
+seeds:
+  local_bike:
+    +schema: seeds
+    seasons:
+      +column_types:
+        season_name: string
+        start_month_day: string
+        end_month_day: string
+    map:
+      +column_types:
+        city: string
+        state: string
+        latitude: float
+        longitude: float
 
 flags:
   require_generic_test_arguments_property: true
