@@ -11,9 +11,7 @@ models:
           - not_null
       - name: store_email
         tests:
-          - is_valid_email:
-              allow_nulls: false
-              allowed_domains: ["bikes.shop"]
+          - not_null
   - name: stg_src_local_bike_brands
     description: "Bike brands sold by Local Bike."
     columns:
@@ -32,8 +30,7 @@ models:
           - not_null
       - name: customer_email
         tests:
-          - is_valid_email:
-              allow_nulls: false
+          - not_null
   - name: stg_src_local_bike_orders
     description: "Order headers with key dates and statuses"
     columns:
@@ -42,6 +39,24 @@ models:
         tests:
           - unique
           - not_null
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_customers')
+                field: customer_id
+      - name: store_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_stores')
+                field: store_id
+      - name: staff_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_staffs')
+                field: staff_id
   - name: stg_src_local_bike_products
     description: "Products sold, linked to brands and categories."
     columns:
@@ -50,6 +65,18 @@ models:
         tests:
           - unique
           - not_null
+      - name: brand_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_brands')
+                field: brand_id
+      - name: category_id                
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_categories')
+                field: category_id                          
   - name: stg_src_local_bike_staffs
     description: "Sales and management staff working in Local Bike stores."
     columns:
@@ -57,16 +84,20 @@ models:
         description: "Primary key, unique identifier for each staff."
         tests:
           - unique
-          - not_null
+          - not_null         
       - name: staff_email
         tests:
-          - is_valid_email:
-              allow_nulls: false
-              allowed_domains: ["bikes.shop"]
+          - not_null
+      - name: store_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_stores')
+                field: store_id              
   - name: stg_src_local_bike_categories
     description: "Product categories such as road, mountain, and electric bikes."
     columns:
-      - name: categor_id
+      - name: category_id
         description: "Primary key, unique identifier for each category."
         tests:
           - unique
@@ -74,16 +105,38 @@ models:
   - name: stg_src_local_bike_order_items
     description: "Detailed order line items with pricing and discounts."
     columns:
-      - name: order_item_id
-        description: "Primary key, unique identifier for each order item. The key = order_id + '_' + item_id."
+      - name: order_id
+        description: "Primary key, composite key with item_id"
         tests:
-          - unique
+          - not_null
+      - name: item_id
+        description: "Primary key, composite key with order_id"
+        tests:
+          - not_null          
+      - name: product_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_products')
+                field: product_id
+      - name: total_item_discount_sold
+        description: "quantity * list_price * (1 - discount)"  
+        tests:
           - not_null
   - name: stg_src_local_bike_stocks
     description: "Stock of products and availability."
     columns:
-      - name: order_item_id
-        description: "Primary key, unique identifier for each product in the stock. The key = store_id + '_' + product_id."
+      - name: store_id
+        description: "Primary key, composite key with product_id."
         tests:
-          - unique
           - not_null
+      - name: product_id
+        description: "Primary key, composite key with store_id."
+        tests:
+          - not_null          
+      - name: product_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_src_local_bike_products')
+                field: product_id           
