@@ -138,15 +138,6 @@ Vous travaillez pour **Local Bike**, qui souhaite développer son **premier tabl
 
 ---
 
-## 🗄️ Schéma brut : Local Bike
-
-### GCP Project
-
-- **Project name** : `databird-473015`
-- **Bronze model** : `dbt_localbike_bronze`
-
----
-
 ### 1️⃣ Création du Dataset
 
 ````sql
@@ -288,13 +279,12 @@ FOREIGN KEY (product_id) REFERENCES `databird-473015.dbt_localbike_bronze.stg_sr
 
 
 🧩 Diagramme Relationnel (ER Diagram)
-```mermaid
 erDiagram
   %% =========================
   %%        SALES
   %% =========================
   CUSTOMERS {
-    INT64 customer_id PK
+    INT64  customer_id PK
     STRING first_name
     STRING last_name
     STRING phone
@@ -306,7 +296,7 @@ erDiagram
   }
 
   STORES {
-    INT64 store_id PK
+    INT64  store_id PK
     STRING store_name
     STRING phone
     STRING email
@@ -317,7 +307,7 @@ erDiagram
   }
 
   STAFFS {
-    INT64 staff_id PK
+    INT64  staff_id PK
     STRING first_name
     STRING last_name
     STRING email
@@ -328,21 +318,21 @@ erDiagram
   }
 
   ORDERS {
-    INT64 order_id PK
-    INT64 customer_id FK
+    INT64  order_id PK
+    INT64  customer_id FK
     STRING order_status
-    DATE  order_date
-    DATE  required_date
-    DATE  shipped_date
-    INT64 store_id FK
-    INT64 staff_id FK
+    DATE   order_date
+    DATE   required_date
+    DATE   shipped_date
+    INT64  store_id FK
+    INT64  staff_id FK
   }
 
   ORDER_ITEMS {
-    INT64 order_id PK,FK
-    INT64 item_id  PK
-    INT64 product_id FK
-    INT64 quantity
+    INT64  order_id  PK, FK
+    INT64  item_id   PK
+    INT64  product_id FK
+    INT64  quantity
     NUMERIC list_price
     NUMERIC discount
   }
@@ -351,28 +341,28 @@ erDiagram
   %%      PRODUCTION
   %% =========================
   BRANDS {
-    INT64 brand_id PK
+    INT64  brand_id PK
     STRING brand_name
   }
 
   CATEGORIES {
-    INT64 category_id PK
+    INT64  category_id PK
     STRING category_name
   }
 
   PRODUCTS {
-    INT64 product_id PK
+    INT64  product_id PK
     STRING product_name
-    INT64 brand_id FK
-    INT64 category_id FK
-    INT64 model_year
+    INT64  brand_id FK
+    INT64  category_id FK
+    INT64  model_year
     NUMERIC list_price
   }
 
   STOCKS {
-    INT64 store_id   PK,FK
-    INT64 product_id PK,FK
-    INT64 quantity
+    INT64  store_id   PK, FK
+    INT64  product_id PK, FK
+    INT64  quantity
   }
 
   %% =========================
@@ -391,7 +381,7 @@ erDiagram
 
   STORES   ||--o{ STOCKS : "stocks"
   PRODUCTS ||--o{ STOCKS : "stocked as"
-````
+
 
 ## 🏗️ Project Structure (Medallion Architecture)
 
