@@ -7,13 +7,13 @@
     )
 }}
 ------------------------------------------
-WITH orders_date AS (
+WITH orders_shipped_date AS (
 
   SELECT 
         order_id, 
         order_date,
-        shipped_date,
         required_date,
+        shipped_date, 
         store_id,
         season_name,
         EXTRACT(YEAR  FROM order_date) as yeardate,
@@ -63,8 +63,8 @@ line_sales AS (
 
   SELECT
     o.order_date,
-    o.shipped_date,
-    o.required_date,    
+    required_date,
+    shipped_date,
     o.order_id,
     o.yeardate,
     o.monthday,
@@ -78,7 +78,7 @@ line_sales AS (
     m.store_latitude,
     m.store_longitude,
     i.total_item_discount_sold AS net_amount
-  FROM orders_date o
+  FROM orders_shipped_date o
   LEFT JOIN items_sold as i on o.order_id = i.order_id
   LEFT JOIN map as m on o.store_id = m.store_id
 
@@ -86,9 +86,9 @@ line_sales AS (
 ------------------------------------------ 
 SELECT
     ls.order_date,
-    ls.shipped_date,
-    ls.required_date,     
     ls.order_id,
+    ls.shipped_date ,
+    ls.required_date ,
     ls.yeardate,
     ls.monthday,
     ls.season_name,
@@ -108,6 +108,6 @@ SELECT
     COUNT(*) AS total_items
 FROM line_sales ls
 LEFT JOIN stores as s on s.store_id = ls.store_id
-GROUP BY ls.order_date,ls.shipped_date,ls.required_date, ls.order_id, ls.yeardate, ls.yearmonth, ls.week_number, ls.month_2digits, ls.month_name, ls.monthday, 
+GROUP BY ls.order_date, ls.shipped_date, ls.required_date,ls.order_id, ls.yeardate, ls.yearmonth, ls.week_number, ls.month_2digits, ls.month_name, ls.monthday, 
          ls.season_name,ls.month_abbrev,ls.store_id, s.store_name, s.store_city, s.store_state, ls.store_latitude, ls.store_longitude
 ORDER BY ls.yeardate, ls.week_number, ls.store_id
