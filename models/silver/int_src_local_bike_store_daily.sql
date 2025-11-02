@@ -13,6 +13,7 @@ WITH orders_date AS (
         order_id, 
         order_date, 
         store_id,
+        season_name,
         EXTRACT(YEAR  FROM order_date) as yeardate,
         EXTRACT(YEAR  FROM order_date) || '-' || LPAD(CAST( EXTRACT(MONTH FROM order_date) AS STRING), 2, '0') AS yearmonth,
         LPAD(CAST( EXTRACT(MONTH FROM order_date) AS STRING), 2, '0') || '-' || LPAD(CAST( EXTRACT(DAY FROM order_date) AS STRING), 2, '0') AS monthday,
@@ -56,27 +57,14 @@ map AS (
 
 ),
 ------------------------------------------
-seasons AS (
-
-  SELECT  
-         season_name,
-         start_month_day,
-         EXTRACT(YEAR  FROM start_month_day) || '-' || LPAD(CAST( EXTRACT(MONTH FROM start_month_day) AS STRING), 2, '0')  AS season_yearmonth,
-         end_month_day
-  FROM  {{ ref('seasons') }}
-
-),
-------------------------------------------
 line_sales AS (
 
   SELECT
     o.order_date,
+    o.order_id,
     o.yeardate,
     o.monthday,
-    CASE 
-        WHEN o.order_date between se.start_month_day and se.end_month_day THEN se.season_name
-        --WHEN order_date between o.yeardate ||'-'||se.start_month_day and o.yeardate ||'-'||se.end_month_day THEN se.season_name
-    END as season_name,
+    o.season_name,
     o.yearmonth,
     o.month_2digits,
     o.month_name,
@@ -89,12 +77,12 @@ line_sales AS (
   FROM orders_date o
   LEFT JOIN items_sold as i on o.order_id = i.order_id
   LEFT JOIN map as m on o.store_id = m.store_id
-  LEFT JOIN seasons se on se.season_yearmonth = o.yearmonth
 
 )
 ------------------------------------------ 
 SELECT
     ls.order_date,
+    ls.order_id,
     ls.yeardate,
     ls.monthday,
     ls.season_name,
@@ -114,6 +102,6 @@ SELECT
     COUNT(*) AS total_items
 FROM line_sales ls
 LEFT JOIN stores as s on s.store_id = ls.store_id
-GROUP BY ls.order_date, ls.yeardate, ls.yearmonth, ls.week_number, ls.month_2digits, ls.month_name, ls.monthday, 
+GROUP BY ls.order_date, ls.order_id, ls.yeardate, ls.yearmonth, ls.week_number, ls.month_2digits, ls.month_name, ls.monthday, 
          ls.season_name,ls.month_abbrev,ls.store_id, s.store_name, s.store_city, s.store_state, ls.store_latitude, ls.store_longitude
 ORDER BY ls.yeardate, ls.week_number, ls.store_id
