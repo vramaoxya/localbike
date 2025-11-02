@@ -23,8 +23,9 @@ WITH order_items AS (
 orders_date AS (
   SELECT 
         order_id, 
-        order_date, 
+        CAST(order_date as date) as order_date,
         store_id,
+        season_name,
         EXTRACT(YEAR FROM order_date) as yeardate,
         EXTRACT(YEAR FROM order_date) || '-' || LPAD(CAST( EXTRACT(MONTH FROM order_date) AS STRING), 2, '0') AS yearmonth,
         LPAD(CAST( EXTRACT(MONTH FROM order_date) AS STRING), 2, '0') || '-' || LPAD(CAST( EXTRACT(DAY FROM order_date) AS STRING), 2, '0') AS monthday,
@@ -62,6 +63,7 @@ categories AS (
 ------------------------------------------
 SELECT
   o.order_id,
+  o.store_id,
   o.order_date,
   o.yeardate,
   o.monthday,
@@ -69,7 +71,8 @@ SELECT
   o.month_2digits,
   o.month_name,
   o.month_abbrev,
-  o.week_number,  
+  o.week_number,
+  o.season_name,
   p.product_id,
   p.product_name,
   b.brand_name,
@@ -78,7 +81,8 @@ SELECT
   oi.list_price,
   oi.discount,
   oi.discount_percent,
-  SUM(oi.total_item_discount_sold) as total_item_discount_sold
+  SUM(oi.total_item_discount_sold) as total_item_discount_sold,
+  COUNT(*) as total_items
 FROM orders_date as o
 LEFT JOIN order_items as oi ON o.order_id = oi.order_id
 LEFT JOIN products as p ON oi.product_id = p.product_id
@@ -86,6 +90,7 @@ LEFT JOIN brands as b ON p.brand_id = b.brand_id
 LEFT JOIN categories as c ON p.category_id = c.category_id
 GROUP BY 
   o.order_id,
+  o.store_id,
   o.order_date,
   o.yeardate,
   o.monthday,
@@ -93,7 +98,8 @@ GROUP BY
   o.month_2digits,
   o.month_name,
   o.month_abbrev,
-  o.week_number,  
+  o.week_number,
+  o.season_name, 
   p.product_id,
   p.product_name,
   b.brand_name,

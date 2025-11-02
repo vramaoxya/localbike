@@ -6,18 +6,25 @@ models:
     columns:
       - name: store_id
         description: "Primary key, unique identifier for each store."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: store_email
-        tests:
+        data_tests:
           - not_null
+      - name: store_name
+        description: "The list of stores."
+        data_tests:
+          - accepted_values:
+             name: accepted_values_for_the_stores
+             arguments:
+                values: var('list_accepted_stores')
   - name: stg_src_local_bike_brands
     description: "Bike brands sold by Local Bike."
     columns:
       - name: brand_id
         description: "Primary key, unique identifier for each brand."
-        tests:
+        data_tests:
           - unique
           - not_null
   - name: stg_src_local_bike_customers
@@ -25,34 +32,34 @@ models:
     columns:
       - name: customer_id
         description: "Primary key, unique identifier for each brand."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: customer_email
-        tests:
+        data_tests:
           - not_null
   - name: stg_src_local_bike_orders
     description: "Order headers with key dates and statuses"
     columns:
       - name: order_id
         description: "Primary key, unique identifier for each order."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: customer_id
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_customers')
                 field: customer_id
       - name: store_id
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_stores')
                 field: store_id
       - name: staff_id
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_staffs')
@@ -62,17 +69,17 @@ models:
     columns:
       - name: product_id
         description: "Primary key, unique identifier for each product."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: brand_id
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_brands')
                 field: brand_id
       - name: category_id                
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_categories')
@@ -82,14 +89,14 @@ models:
     columns:
       - name: staff_id
         description: "Primary key, unique identifier for each staff."
-        tests:
+        data_tests:
           - unique
           - not_null         
       - name: staff_email
-        tests:
+        data_tests:
           - not_null
       - name: store_id
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_stores')
@@ -99,7 +106,7 @@ models:
     columns:
       - name: category_id
         description: "Primary key, unique identifier for each category."
-        tests:
+        data_tests:
           - unique
           - not_null
   - name: stg_src_local_bike_order_items
@@ -107,35 +114,49 @@ models:
     columns:
       - name: order_id
         description: "Primary key, composite key with item_id"
-        tests:
+        data_tests:
           - not_null
       - name: item_id
         description: "Primary key, composite key with order_id"
-        tests:
-          - not_null          
+        data_tests:
+          - not_null
+      - name: quantity
+        description: "Order quantity"
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: list_price
+        description: "Order prices"
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0                      
       - name: product_id
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_products')
                 field: product_id
       - name: total_item_discount_sold
         description: "quantity * list_price * (1 - discount)"  
-        tests:
+        data_tests:
           - not_null
   - name: stg_src_local_bike_stocks
     description: "Stock of products and availability."
     columns:
       - name: store_id
         description: "Primary key, composite key with product_id."
-        tests:
+        data_tests:
           - not_null
       - name: product_id
         description: "Primary key, composite key with store_id."
-        tests:
+        data_tests:
           - not_null          
       - name: product_id
-        tests:
+        data_tests:
           - relationships:
               arguments:
                 to: ref('stg_src_local_bike_products')

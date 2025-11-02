@@ -49,7 +49,7 @@ models:
       +tags: ['integration', 'intermediate', 'silver']
     gold:
       +schema: gold
-      +tags: ['mrt', 'analytics', 'gold']
+      +tags: ['mrt', 'analytics', 'sales', 'gold']
       +materialized: table
 
 seeds:
@@ -69,6 +69,9 @@ seeds:
 
 flags:
   require_generic_test_arguments_property: true
+
+vars:
+  list_accepted_stores: ['Santa Cruz Bikes','Baldwin Bikes','Rowlett Bikes']
 
 # Documentation configuration
 #docs:

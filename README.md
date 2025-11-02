@@ -12,11 +12,15 @@ Local Bike data Analyse
 
 # Commandes:
 
-dbt depts
+dbt deps
+dbt compile
+dbt test -s assert_total_order_amount_is_positive
+dbt test --select tag:bronze
 dbt seed --select map seasons
 dbt test -- bronze
-dbt run -- bronze silver gold
-dbt build -- bronze silver gold
+dbt run --select bronze silver gold
+dbt build -s bronze silver gold
+dbt test -m bronze --store-failures
 
 Generate docs :
 dbt docs generate
