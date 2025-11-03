@@ -12,19 +12,20 @@ Local Bike data Analyse
 
 # Commandes:
 
-dbt deps
-dbt compile
-dbt test -s assert_total_order_amount_is_positive
-dbt test --select tag:bronze
-dbt seed --select map seasons
-dbt test -- bronze
-dbt run --select bronze silver gold
-dbt build -s bronze silver gold
-dbt test -m bronze --store-failures
+- dbt deps
+- dbt compile
+- dbt test -s assert_total_order_amount_is_positive
+- dbt test --select tag:bronze
+- dbt seed --select map seasons
+- dbt test -- bronze
+- dbt run --select bronze silver gold
+- dbt build -s bronze silver gold
+- dbt test -m bronze --store-failures
 
 Generate docs :
-dbt docs generate
-dbt docs serve
+
+- dbt docs generate
+- "dbt docs serve"
 
 ---
 
@@ -140,7 +141,7 @@ Vous travaillez pour **Local Bike**, qui souhaite développer son **premier tabl
 
 ### 1️⃣ Création du Dataset
 
-````sql
+```sql
 CREATE SCHEMA IF NOT EXISTS `databird-473015.dbt_localbike_bronze`
 OPTIONS (
   location = "US",
@@ -388,32 +389,92 @@ erDiagram
 local_bike/
 │
 ├── dbt_project.yml
+|
+├── analyses/
 │
+├── docs/
+│ ├── int_src_local_bike_product_daily.md
+│ ├── int_src_local_bike_staff_daily.md
+│ ├── int_src_local_bike_staff_hierarchy.md
+│ ├── int_src_local_bike_store_daily.md
+│ ├── int_src_local_bike_store_shipped_order.md
+│ ├── mrt_order_shipped_aborted_montly.md
+│ ├── mrt_order_shipped_montly.md
+│ ├── mrt_products_brands_monthly.md
+│ ├── mrt_products_ranking_yearly_top3.md
+│ ├── mrt_sales_seasons_yearly.md
+│ ├── mrt_staff_ranking_yearly.md
+│ ├── mrt_staff_sales_monthly.md
+│ ├── mrt_stores_items_monthly.md
+│ ├── mrt_stores_ranking_yearly.md
+│ └── mrt_stores_sales_monthly.md
+|
 ├── models/
 │ ├── bronze/ # staging sources, data from BigQuery
-│ │ ├── stg_customers.sql
-│ │ ├── stg_orders.sql
-│ │ ├── stg_order_items.sql
-│ │ ├── stg_stores.sql
-│ │ ├── stg_staffs.sql
-│ │ ├── stg_products.sql
-│ │ ├── stg_brands.sql
-│ │ └── stg_categories.sql
+│ │ ├── schema.yml
+│ │ ├── stg_src_local_bike_brands.sql
+│ │ ├── stg_src_local_bike_categories.sql
+│ │ ├── stg_src_local_bike_customers.sql
+│ │ ├── stg_src_local_bike_orders.sql
+│ │ ├── stg_src_local_bike_order_items.sql
+│ │ ├── stg_src_local_bike_products.sql
+│ │ ├── stg_src_local_bike_staffs.sql
+│ │ ├── stg_src_local_bike_stocks.sql
+│ │ └── stg_src_local_bike_stores.sql
 │ │
 │ ├── silver/ # Intermediate models
-│ │ ├── int_sales.sql
-│ │ ├── int_product_sales.sql
-│ │ └── int_customer_sales.sql
+│ │ ├──int_src_local_bike_product_daily.sql
+│ │ ├──int_src_local_bike_staff_daily.sql
+│ │ ├──int_src_local_bike_staff_hierarchy.sql
+│ │ ├──int_src_local_bike_store_daily.sql
+│ │ ├──int_src_local_bike_store_shipped_order.sql
+│ │ ├──_int_src_local_bike_product_daily.yml
+│ │ ├──_int_src_local_bike_staff_daily.yml
+│ │ ├──_int_src_local_bike_staff_hierarchy.yml
+│ │ ├──_int_src_local_bike_store_daily.yml
+│ │ └──_int_src_local_bike_store_shipped_order.yml
 │ │
 │ ├── gold/ # Analytical models for BI tools
-│ │ ├── dim_customers.sql
-│ │ ├── dim_products.sql
-│ │ ├── fct_sales.sql
-│ │ └── fct_customer_lifetime_value.sql
+│ │ ├──mrt_order_shipped_aborted_montly.sql
+│ │ ├──mrt_order_shipped_montly.sql
+│ │ ├──mrt_products_brands_monthly.sql
+│ │ ├──mrt_products_ranking_yearly_top3.sql
+│ │ ├──mrt_sales_seasons_yearly.sql
+│ │ ├──mrt_staff_ranking_yearly.sql
+│ │ ├──mrt_staff_sales_monthly.sql
+│ │ ├──mrt_stores_items_monthly.sql
+│ │ ├──mrt_stores_ranking_yearly.sql
+│ │ ├──mrt_stores_sales_monthly.sql
+│ │ ├──_mrt_order_shipped_aborted_montly.yml
+│ │ ├──_mrt_order_shipped_montly.yml
+│ │ ├──_mrt_products_brands_monthly.yml
+│ │ ├──_mrt_products_ranking_yearly_top3.yml
+│ │ ├──_mrt_sales_seasons_yearly.yml
+│ │ ├──_mrt_staff_ranking_yearly.yml
+│ │ ├──_mrt_staff_sales_monthly.yml
+│ │ ├──_mrt_stores_items_monthly.yml
+│ │ ├──_mrt_stores_ranking_yearly.yml
+│ │ └──_mrt_stores_sales_monthly.yml
 │ │
-│ └── schema.yml
+│ └── sources.yml
+|
+├── macros/
+│ ├── calculate_total_order_item_amount.sql
+│ ├── cents_to_dollars.sql
+│ ├── get_season.sql
+│ └── list_months.sql
 │
+├── tests/
+│ ├── assert_total_order_amount_is_positive.sql
+|
 └── seeds/
 │ └── map.csv
 | └── seasons.csv
+|
+└── snapshots/
+|
 └── README.md
+└── package-lock.yml
+└── packages.yml
+└── README.md
+```
